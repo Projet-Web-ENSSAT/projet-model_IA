@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getPlanetDescription } from './agents/planetAgent';
+import { getPlanetDescription, getPlanetAnecdote } from './agents/planetAgent';
 import { getDailyHoroscope } from './agents/horoscopeAgent';
 
 function App() {
@@ -15,13 +15,25 @@ function App() {
 
       <h2>🪐 Anecdote planète</h2>
       <input
-        placeholder="Ex: Jupiter, Mars, Saturne..."
+        placeholder="Caractéristique"
         value={planet}
         onChange={e => setPlanet(e.target.value)}
       />
       <button onClick={async () => {
         setPlanetResult('...');
         setPlanetResult(await getPlanetDescription(planet));
+      }}>
+        Générer
+      </button>
+
+      <input
+        placeholder="Anecdote"
+        value={planet}
+        onChange={e => setPlanet(e.target.value)}
+      />
+      <button onClick={async () => {
+        setPlanetResult('...');
+        setPlanetResult(await getPlanetAnecdote(planet));
       }}>
         Générer
       </button>
