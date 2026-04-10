@@ -1,29 +1,48 @@
-// src/App.jsx
 import { useState } from 'react';
-import { streamCompletion } from './lib/llmClient';
+import { getPlanetDescription } from './agents/planetAgent';
+import { getDailyHoroscope } from './agents/horoscopeAgent';
 
 function App() {
-  const [response, setResponse] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [planet, setPlanet] = useState('');
+  const [sign, setSign] = useState('');
+  const [planetResult, setPlanetResult] = useState('');
+  const [horoResult, setHoroResult] = useState('');
 
-  async function handleTest() {
-    setResponse('');
-    setLoading(true);
-
-    await streamCompletion(
-      [{ role: 'user', content: 'Dis juste "ça marche !" et rien d\'autre.' }],
-      (delta) => setResponse(prev => prev + delta)
-    );
-
-    setLoading(false);
-  }
+  const today = new Date().toLocaleDateString('fr-FR');
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <button onClick={handleTest} disabled={loading}>
-        {loading ? 'En cours...' : 'Tester le LLM'}
+    <div style={{ padding: '2rem', fontFamily: 'sans-serif', maxWidth: '600px' }}>
+
+      <h2>🪐 Anecdote planète</h2>
+      <input
+        placeholder="Ex: Jupiter, Mars, Saturne..."
+        value={planet}
+        onChange={e => setPlanet(e.target.value)}
+      />
+      <button onClick={async () => {
+        setPlanetResult('...');
+        setPlanetResult(await getPlanetDescription(planet));
+      }}>
+        Générer
       </button>
-      <p style={{ marginTop: '1rem', whiteSpace: 'pre-wrap' }}>{response}</p>
+      <p>{planetResult}</p>
+
+      <hr />
+
+      <h2>🔮 Horoscope du jour</h2>
+      <input
+        placeholder="Ex: Bélier, Taureau, Gémeaux..."
+        value={sign}
+        onChange={e => setSign(e.target.value)}
+      />
+      <button onClick={async () => {
+        setHoroResult('...');
+        setHoroResult(await getDailyHoroscope(sign, today));
+      }}>
+        Générer
+      </button>
+      <p>{horoResult}</p>
+
     </div>
   );
 }
