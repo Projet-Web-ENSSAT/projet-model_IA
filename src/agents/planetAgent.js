@@ -18,6 +18,14 @@ export async function getPlanetDescription(planetName) {
     return response;
 }
 
+export function getPlanetCacheContext() {
+    if (cache.size === 0) return null;
+
+    return [...cache.entries()]
+        .map(([key, value]) => `[${key}]\n${value}`)
+        .join('\n\n');
+}
+
 export async function getPlanetAnecdote(planetName) {
     if (cache.has('anecdote_' + planetName)) return cache.get('anecdote_' + planetName);
 
