@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { getPlanetDescription, getPlanetAnecdote } from './agents/planetAgent';
 import { getDailyHoroscope } from './agents/horoscopeAgent';
+import { generateQuiz } from './agents/quizzAgent';
 
 function App() {
   const [planet, setPlanet] = useState('');
   const [sign, setSign] = useState('');
   const [planetResult, setPlanetResult] = useState('');
   const [horoResult, setHoroResult] = useState('');
+  const [quizResult, setQuizResult] = useState('');
+  const [quizError, setQuizError] = useState('');
 
   const today = new Date().toLocaleDateString('fr-FR');
 
@@ -54,6 +57,24 @@ function App() {
         Générer
       </button>
       <p>{horoResult}</p>
+
+      <hr />
+
+      <h2>❓ Quiz planètes</h2>
+      <button onClick={async () => {
+        setQuizResult('...');
+        setQuizError('');
+        try {
+          setQuizResult(await generateQuiz());
+        } catch (e) {
+          setQuizResult('');
+          setQuizError(e.message);
+        }
+      }}>
+        Générer
+      </button>
+      {quizError && <p style={{ color: 'red' }}>{quizError}</p>}
+      <pre style={{ whiteSpace: 'pre-wrap' }}>{quizResult}</pre>
 
     </div>
   );
