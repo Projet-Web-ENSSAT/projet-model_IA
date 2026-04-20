@@ -3,28 +3,33 @@ import { useFrame } from "@react-three/fiber";
 import Earth from "./Earth";
 import Moon from "./Moon";
 
-const EarthSystem = ({ orbitRadius = 9, orbitSpeed = 0.4 }) => {
+const EarthSystem = ({ orbitRadius = 8, orbitSpeed = 0.4 }) => {
   const groupRef = useRef();
   const moonOrbitRef = useRef();
 
+  // Dans EarthSystem.jsx
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
+    const earthOrbitSpeed = 0.4;
+    const earthRadius = 11;
 
     if (groupRef.current) {
-      // 1. Positionne tout le système (Terre + Lune) sur l'orbite solaire
-      const x = Math.cos(t * orbitSpeed) * orbitRadius;
-      const z = Math.sin(t * orbitSpeed) * orbitRadius;
+      // Orbite de la Terre autour du Soleil
+      const x = Math.cos(t * earthOrbitSpeed) * earthRadius;
+      const z = Math.sin(t * earthOrbitSpeed) * earthRadius;
       groupRef.current.position.set(x, 0, z);
     }
 
     if (moonOrbitRef.current) {
-      // 2. Fait tourner la lune autour de la Terre (centre du groupe)
-      const moonT = t * 1.5; // Vitesse de la lune
-      const moonDist = 0.3; // Distance Terre-Lune
+      // Orbite de la Lune AUTOUR de la Terre
+      const moonSpeed = 1.5;
+      // BAISSE CETTE VALEUR : si 0.3 est trop loin, tente 0.15 ou 0.1
+      const moonDist = 0.7;
+
       moonOrbitRef.current.position.set(
-        Math.cos(moonT) * moonDist,
+        Math.cos(t * moonSpeed) * moonDist,
         0,
-        Math.sin(moonT) * moonDist,
+        Math.sin(t * moonSpeed) * moonDist,
       );
     }
   });
@@ -35,7 +40,7 @@ const EarthSystem = ({ orbitRadius = 9, orbitSpeed = 0.4 }) => {
       <Earth scale={0.005} />
       {/* La lune est décalée et animée par moonOrbitRef */}
       <group ref={moonOrbitRef}>
-        <Moon scale={0.0004} />
+        <Moon scale={0.001} />
       </group>
     </group>
   );

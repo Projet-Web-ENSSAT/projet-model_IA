@@ -3,7 +3,7 @@ import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const Sun = ({ scale = 0.03, position = [0, 0, 0] }) => {
+const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
   const sunRef = useRef();
 
   // Chargement des assets spécifiques au Soleil
