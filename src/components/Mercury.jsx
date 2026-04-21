@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../SimulationContext";
 
 const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const mercuryRef = useRef();
   const fbx = useFBX("/src/assets/model/mercury/source/Mercury.fbx");
   const texture = useTexture(
@@ -23,6 +25,7 @@ const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
   }, [fbx, texture]);
 
   useFrame((state) => {
+    if (paused) return;
     const t = state.clock.getElapsedTime() * orbitSpeed;
     if (mercuryRef.current) {
       mercuryRef.current.position.set(
@@ -34,7 +37,15 @@ const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
     }
   });
 
-  return <primitive ref={mercuryRef} object={fbx} scale={scale} />;
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (!onPlanetClick || !mercuryRef.current) return;
+    const pos = new THREE.Vector3();
+    mercuryRef.current.getWorldPosition(pos);
+    onPlanetClick("Mercure", pos);
+  };
+
+  return <primitive ref={mercuryRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 
 export default Mercury;

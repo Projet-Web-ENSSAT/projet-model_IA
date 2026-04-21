@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../SimulationContext";
 
 const Earth = ({ scale = 0.005 }) => {
+  const { paused } = useSimulation();
   const earthRef = useRef();
 
   const fbx = useFBX("/src/assets/model/earth/source/Earth.fbx");
@@ -25,6 +27,7 @@ const Earth = ({ scale = 0.005 }) => {
   // ON NE CALCULE PLUS L'ORBITE ICI
   // On garde juste la rotation sur elle-même (l'axe Y)
   useFrame((state, delta) => {
+    if (paused) return;
     if (earthRef.current) {
       earthRef.current.rotation.y += delta * 0.2;
     }

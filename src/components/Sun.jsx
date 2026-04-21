@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../SimulationContext";
 
 const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const sunRef = useRef();
 
   // Chargement des assets spécifiques au Soleil
@@ -28,13 +30,22 @@ const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
 
   // Petite animation de rotation pour donner vie au soleil
   useFrame((state, delta) => {
+    if (paused) return;
     if (sunRef.current) {
       sunRef.current.rotation.y += delta * 0.1;
     }
   });
 
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (!onPlanetClick || !sunRef.current) return;
+    const pos = new THREE.Vector3();
+    sunRef.current.getWorldPosition(pos);
+    onPlanetClick("Soleil", pos);
+  };
+
   return (
-    <primitive ref={sunRef} object={fbx} scale={scale} position={position} />
+    <primitive ref={sunRef} object={fbx} scale={scale} position={position} onClick={handleClick} />
   );
 };
 

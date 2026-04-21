@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../SimulationContext";
 
 const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const neptuneRef = useRef();
   const fbx = useFBX("/src/assets/model/neptune/source/Neptune.fbx");
   const texture = useTexture(
@@ -23,6 +25,7 @@ const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5 }) => {
   }, [fbx, texture]);
 
   useFrame((state) => {
+    if (paused) return;
     const t = state.clock.getElapsedTime() * orbitSpeed;
     if (neptuneRef.current) {
       neptuneRef.current.position.set(
@@ -34,7 +37,15 @@ const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5 }) => {
     }
   });
 
-  return <primitive ref={neptuneRef} object={fbx} scale={scale} />;
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (!onPlanetClick || !neptuneRef.current) return;
+    const pos = new THREE.Vector3();
+    neptuneRef.current.getWorldPosition(pos);
+    onPlanetClick("Neptune", pos);
+  };
+
+  return <primitive ref={neptuneRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 
 export default Neptune;
