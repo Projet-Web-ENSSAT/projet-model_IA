@@ -22,17 +22,18 @@ const Mars = ({ scale = 0.004, orbitRadius = 10, orbitSpeed = 0.3 }) => {
     });
   }, [fbx, texture]);
 
-  useFrame((state) => {
-    if (paused) return;
-    const t = state.clock.getElapsedTime() * orbitSpeed;
-    if (marsRef.current) {
-      marsRef.current.position.set(
-        Math.cos(t) * orbitRadius,
-        0,
-        Math.sin(t) * orbitRadius,
-      );
-      marsRef.current.rotation.y += 0.005;
+  useFrame((state, delta) => {
+    if (!paused) {
+      const t = state.clock.getElapsedTime() * orbitSpeed;
+      if (marsRef.current) {
+        marsRef.current.position.set(
+          Math.cos(t) * orbitRadius,
+          0,
+          Math.sin(t) * orbitRadius,
+        );
+      }
     }
+    if (marsRef.current) marsRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
@@ -40,7 +41,10 @@ const Mars = ({ scale = 0.004, orbitRadius = 10, orbitSpeed = 0.3 }) => {
     if (!onPlanetClick || !marsRef.current) return;
     const pos = new THREE.Vector3();
     marsRef.current.getWorldPosition(pos);
-    onPlanetClick("Mars", pos);
+    const box = new THREE.Box3().setFromObject(marsRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Mars", pos, sphere.radius);
   };
 
   return <primitive ref={marsRef} object={fbx} scale={scale} onClick={handleClick} />;

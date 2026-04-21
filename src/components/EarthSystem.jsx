@@ -38,7 +38,10 @@ const EarthSystem = ({ orbitRadius = 8, orbitSpeed = 0.4 }) => {
     if (!onPlanetClick || !groupRef.current) return;
     const pos = new THREE.Vector3();
     groupRef.current.getWorldPosition(pos);
-    onPlanetClick("Terre", pos);
+    const box = new THREE.Box3().setFromObject(groupRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Terre", pos, sphere.radius);
   };
 
   return (

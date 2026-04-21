@@ -15,7 +15,7 @@ import Saturn from "./components/Saturn";
 import Uranus from "./components/Uranus";
 import Neptune from "./components/Neptune";
 
-function CameraController({ zoomTarget, onReturnComplete }) {
+function CameraController({ zoomTarget, zoomRadius, onReturnComplete }) {
   const { camera } = useThree();
   const savedPos = useRef(null);
   const savedQuat = useRef(null);
@@ -33,8 +33,10 @@ function CameraController({ zoomTarget, onReturnComplete }) {
         wasZoomed.current = true;
       }
 
+      // Distance = 2× le rayon visuel pour voir la planète entière (FOV 20°)
+      const dist = Math.max(1, zoomRadius * 2.5);
       const desiredPos = zoomTarget.clone().add(
-        approachDir.current.clone().multiplyScalar(4)
+        approachDir.current.clone().multiplyScalar(dist)
       );
 
       camera.position.lerp(desiredPos, 0.06);
@@ -66,8 +68,8 @@ export default function Scene() {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [orbitEnabled, setOrbitEnabled] = useState(true);
 
-  const handlePlanetClick = useCallback((name, worldPos) => {
-    setSelectedPlanet({ name, pos: worldPos.clone() });
+  const handlePlanetClick = useCallback((name, worldPos, zoomRadius) => {
+    setSelectedPlanet({ name, pos: worldPos.clone(), zoomRadius });
     setOrbitEnabled(false);
   }, []);
 
@@ -80,7 +82,7 @@ export default function Scene() {
   }, []);
 
   return (
-    <SimulationContext.Provider value={{ paused: !orbitEnabled, onPlanetClick: handlePlanetClick }}>
+    <SimulationContext.Provider value={{ paused: !!selectedPlanet, onPlanetClick: handlePlanetClick }}>
       <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh" }}>
         {selectedPlanet && (
           <div style={{
@@ -140,6 +142,7 @@ export default function Scene() {
           </Suspense>
           <CameraController
             zoomTarget={selectedPlanet?.pos ?? null}
+            zoomRadius={selectedPlanet?.zoomRadius ?? 4}
             onReturnComplete={handleReturnComplete}
           />
           {orbitEnabled && (

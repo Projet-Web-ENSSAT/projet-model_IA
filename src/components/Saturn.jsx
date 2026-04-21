@@ -22,17 +22,18 @@ const Saturn = ({ scale = 0.012, orbitRadius = 17, orbitSpeed = 0.1 }) => {
     });
   }, [fbx, texture]);
 
-  useFrame((state) => {
-    if (paused) return;
-    const t = state.clock.getElapsedTime() * orbitSpeed;
-    if (saturnRef.current) {
-      saturnRef.current.position.set(
-        Math.cos(t) * orbitRadius,
-        0,
-        Math.sin(t) * orbitRadius,
-      );
-      saturnRef.current.rotation.y += 0.005;
+  useFrame((state, delta) => {
+    if (!paused) {
+      const t = state.clock.getElapsedTime() * orbitSpeed;
+      if (saturnRef.current) {
+        saturnRef.current.position.set(
+          Math.cos(t) * orbitRadius,
+          0,
+          Math.sin(t) * orbitRadius,
+        );
+      }
     }
+    if (saturnRef.current) saturnRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
@@ -40,7 +41,10 @@ const Saturn = ({ scale = 0.012, orbitRadius = 17, orbitSpeed = 0.1 }) => {
     if (!onPlanetClick || !saturnRef.current) return;
     const pos = new THREE.Vector3();
     saturnRef.current.getWorldPosition(pos);
-    onPlanetClick("Saturne", pos);
+    const box = new THREE.Box3().setFromObject(saturnRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Saturne", pos, sphere.radius);
   };
 
   return <primitive ref={saturnRef} object={fbx} scale={scale} onClick={handleClick} />;

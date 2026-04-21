@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { useSimulation } from "../SimulationContext";
 
 const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
-  const { paused, onPlanetClick } = useSimulation();
+  const { onPlanetClick } = useSimulation();
   const sunRef = useRef();
 
   // Chargement des assets spécifiques au Soleil
@@ -29,11 +29,8 @@ const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
   }, [fbx, texture]);
 
   // Petite animation de rotation pour donner vie au soleil
-  useFrame((state, delta) => {
-    if (paused) return;
-    if (sunRef.current) {
-      sunRef.current.rotation.y += delta * 0.1;
-    }
+  useFrame((_, delta) => {
+    if (sunRef.current) sunRef.current.rotation.y += delta * 0.1;
   });
 
   const handleClick = (e) => {
@@ -41,7 +38,10 @@ const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
     if (!onPlanetClick || !sunRef.current) return;
     const pos = new THREE.Vector3();
     sunRef.current.getWorldPosition(pos);
-    onPlanetClick("Soleil", pos);
+    const box = new THREE.Box3().setFromObject(sunRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Soleil", pos, sphere.radius);
   };
 
   return (

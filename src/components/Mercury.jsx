@@ -24,17 +24,18 @@ const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
     });
   }, [fbx, texture]);
 
-  useFrame((state) => {
-    if (paused) return;
-    const t = state.clock.getElapsedTime() * orbitSpeed;
-    if (mercuryRef.current) {
-      mercuryRef.current.position.set(
-        Math.cos(t) * orbitRadius,
-        0,
-        Math.sin(t) * orbitRadius,
-      );
-      mercuryRef.current.rotation.y += 0.005;
+  useFrame((state, delta) => {
+    if (!paused) {
+      const t = state.clock.getElapsedTime() * orbitSpeed;
+      if (mercuryRef.current) {
+        mercuryRef.current.position.set(
+          Math.cos(t) * orbitRadius,
+          0,
+          Math.sin(t) * orbitRadius,
+        );
+      }
     }
+    if (mercuryRef.current) mercuryRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
@@ -42,7 +43,10 @@ const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
     if (!onPlanetClick || !mercuryRef.current) return;
     const pos = new THREE.Vector3();
     mercuryRef.current.getWorldPosition(pos);
-    onPlanetClick("Mercure", pos);
+    const box = new THREE.Box3().setFromObject(mercuryRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Mercure", pos, sphere.radius);
   };
 
   return <primitive ref={mercuryRef} object={fbx} scale={scale} onClick={handleClick} />;

@@ -24,17 +24,18 @@ const Venus = ({ scale = 0.0045, orbitRadius = 6, orbitSpeed = 0.3 }) => {
     });
   }, [fbx, texture]);
 
-  useFrame((state) => {
-    if (paused) return;
-    const t = state.clock.getElapsedTime() * orbitSpeed;
-    if (venusRef.current) {
-      venusRef.current.position.set(
-        Math.cos(t) * orbitRadius,
-        0,
-        Math.sin(t) * orbitRadius,
-      );
-      venusRef.current.rotation.y += 0.005;
+  useFrame((state, delta) => {
+    if (!paused) {
+      const t = state.clock.getElapsedTime() * orbitSpeed;
+      if (venusRef.current) {
+        venusRef.current.position.set(
+          Math.cos(t) * orbitRadius,
+          0,
+          Math.sin(t) * orbitRadius,
+        );
+      }
     }
+    if (venusRef.current) venusRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
@@ -42,7 +43,10 @@ const Venus = ({ scale = 0.0045, orbitRadius = 6, orbitSpeed = 0.3 }) => {
     if (!onPlanetClick || !venusRef.current) return;
     const pos = new THREE.Vector3();
     venusRef.current.getWorldPosition(pos);
-    onPlanetClick("Vénus", pos);
+    const box = new THREE.Box3().setFromObject(venusRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Vénus", pos, sphere.radius);
   };
 
   return <primitive ref={venusRef} object={fbx} scale={scale} onClick={handleClick} />;
