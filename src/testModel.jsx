@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { getPlanetDescription, getPlanetAnecdote } from './agents/planetAgent';
 import { getDailyHoroscope } from './agents/horoscopeAgent';
 import { generateQuiz } from './agents/quizzAgent';
-import Quiz from './components/Quiz';
 
 function App() {
   const [planet, setPlanet] = useState('');
@@ -75,7 +74,7 @@ function App() {
         Générer
       </button>
       {quizError && <p style={{ color: 'red' }}>{quizError}</p>}
-      <Quiz key={quizResult} raw={quizResult && quizResult !== '...' ? quizResult : null} />
+      <pre style={{ whiteSpace: 'pre-wrap' }}>{quizResult}</pre>
 
     </div>
   );

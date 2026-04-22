@@ -1,11 +1,7 @@
 import { complete } from "../lib/llmClient";
-import { clearPlanetCacheContext, getPlanetCacheContext } from "./planetAgent";
+import { getPlanetCacheContext } from "./planetAgent";
 
-const SYSTEM_PROMPT = `Tu es un agent spécialisé dans les questionnaires ludiques et éducatifs pour enfants.
-Tu réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ni après, sans balises markdown.
-Chaque élément du tableau a exactement cette structure :
-{"question":"...","choices":{"A":"...","B":"...","C":"...","D":"..."},"answer":"A"}
-La valeur de "answer" est toujours une seule lettre majuscule parmi A, B, C ou D.`;
+const SYSTEM_PROMPT = `Tu es un agent spécialisé dans les questionnaires. Ton objectif et de créer des quizz ludiques et éducatifs. Les questions doivent être accompagnés de 4 propositions de réponses, dont une seule est correcte. Chaque questionnaire a 5 questions. Tu génères dans l'ordre : la question, la proposition A, la proposition B, la proposition C, la proposition D, et enfin tu indiques laquelle est la bonne réponse. Toujours synthétique, ton objectif est de donner des réponses que même un enfant pourrait comprendre. Je veux une mise en forme avec un résultat pouvant être facilement parsé, idéalement en JSON.`;
 
 export async function generateQuiz() {
     const planetContext = getPlanetCacheContext();
@@ -15,13 +11,10 @@ export async function generateQuiz() {
 
         const messages = [
             {role: 'user', content: userContent}
-        ];
+     ];
 
-        const responses = await complete(messages, {systemPrompt: SYSTEM_PROMPT, temperature: 0.8});
-        clearPlanetCacheContext();
-
-        return responses;
+        return await complete(messages, {systemPrompt: SYSTEM_PROMPT, temperature: 0.8});
     } else {
-        throw new Error(`Vous n'avez pas encore cliqué sur une planète !`);
+        throw new Error('Aucun contexte disponible pour les planètes. Impossible de générer le quiz.');
     }  
 }
