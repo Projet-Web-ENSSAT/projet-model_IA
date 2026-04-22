@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Scene from "./Scene";
-import "./App.css";
+import "./css/App.css";
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);

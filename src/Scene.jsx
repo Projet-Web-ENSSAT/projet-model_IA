@@ -4,6 +4,7 @@ import { Suspense, useState, useCallback, useRef } from "react";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { SimulationContext } from "./SimulationContext";
+import "./css/Scene.css";
 
 import Sun from "./components/Sun";
 import Mercury from "./components/Mercury";
@@ -78,7 +79,7 @@ function stripMarkdown(text) {
 export default function Scene() {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [orbitEnabled, setOrbitEnabled] = useState(true);
-  const [infoPanel, setInfoPanel] = useState(null); // { title, content, loading }
+  const [infoPanel, setInfoPanel] = useState(null);
 
   const handlePlanetClick = useCallback((name, worldPos, zoomRadius) => {
     setSelectedPlanet({ name, pos: worldPos.clone(), zoomRadius });
@@ -110,132 +111,23 @@ export default function Scene() {
 
   return (
     <SimulationContext.Provider value={{ paused: !!selectedPlanet, onPlanetClick: handlePlanetClick }}>
-      <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh" }}>
+      <div className="scene-container">
         {selectedPlanet && (
-          <div style={{
-            position: "absolute",
-            top: 24,
-            left: 24,
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            gap: 16,
-          }}>
-            <button
-              onClick={handleReturn}
-              style={{
-                padding: "8px 18px",
-                background: "rgba(255,255,255,0.12)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.35)",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontSize: 14,
-                backdropFilter: "blur(6px)",
-                letterSpacing: "0.03em",
-              }}
-            >
-              ← Retour
-            </button>
-
-            <button
-              onClick={handleAnecdoteClick}
-              style={{
-                padding: "8px 18px",
-                background: "rgba(255,255,255,0.12)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.35)",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontSize: 14,
-                backdropFilter: "blur(6px)",
-                letterSpacing: "0.03em",
-              }}
-            >
-              Anecdotes
-            </button>
-
-            <button
-              onClick={handleCharacteristicsClick}
-              style={{
-                padding: "8px 18px",
-                background: "rgba(255,255,255,0.12)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.35)",
-                borderRadius: 8,
-                cursor: "pointer",
-                fontSize: 14,
-                backdropFilter: "blur(6px)",
-                letterSpacing: "0.03em",
-              }}
-            >
-              Caractéristiques
-            </button>
-
-            <span style={{
-              color: "white",
-              fontSize: 20,
-              fontWeight: 600,
-              textShadow: "0 2px 12px rgba(0,0,0,0.8)",
-              fontFamily: "sans-serif",
-            }}>
-              {selectedPlanet.name}
-            </span>
+          <div className="planet-toolbar">
+            <button className="toolbar-btn" onClick={handleReturn}>← Retour</button>
+            <button className="toolbar-btn" onClick={handleAnecdoteClick}>Anecdotes</button>
+            <button className="toolbar-btn" onClick={handleCharacteristicsClick}>Caractéristiques</button>
+            <span className="planet-name">{selectedPlanet.name}</span>
           </div>
         )}
 
         {infoPanel && (
-          <div style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 20,
-            backgroundColor: "rgba(0, 0, 0, 0.9)",
-            color: "white",
-            padding: "30px",
-            width: "700px",
-            maxWidth: "90vw",
-            maxHeight: "70vh",
-            borderRadius: "10px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-            overflowY: "auto",
-          }}>
-            <h2 style={{
-              fontFamily: "'Orbitron', sans-serif",
-              fontSize: "28px",
-              margin: 0,
-              color: "white",
-            }}>
-              {selectedPlanet.name} — {infoPanel.title}
-            </h2>
-            <p style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: "16px",
-              lineHeight: "1.6",
-              margin: 0,
-              whiteSpace: "pre-wrap",
-            }}>
+          <div className="info-panel">
+            <h2 className="info-panel-title">{selectedPlanet.name} — {infoPanel.title}</h2>
+            <p className="info-panel-content">
               {infoPanel.loading ? "Chargement…" : stripMarkdown(infoPanel.content)}
             </p>
-            <button
-              onClick={() => setInfoPanel(null)}
-              style={{
-                alignSelf: "flex-start",
-                padding: "10px 24px",
-                fontSize: "15px",
-                color: "white",
-                backgroundColor: "#34393f",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontFamily: "'Orbitron', sans-serif",
-              }}
-            >
-              Fermer
-            </button>
+            <button className="info-panel-close" onClick={() => setInfoPanel(null)}>Fermer</button>
           </div>
         )}
 

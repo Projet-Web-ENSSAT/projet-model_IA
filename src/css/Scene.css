@@ -1,0 +1,87 @@
+.scene-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.planet-toolbar {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-btn {
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  backdrop-filter: blur(6px);
+  letter-spacing: 0.03em;
+}
+
+.planet-name {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  font-family: sans-serif;
+}
+
+.info-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 30px;
+  width: 700px;
+  max-width: 90vw;
+  max-height: 70vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.info-panel-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  margin: 0;
+  color: white;
+}
+
+.info-panel-content {
+  font-family: 'Space Mono', monospace;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.info-panel-close {
+  align-self: flex-start;
+  padding: 10px 24px;
+  font-size: 15px;
+  color: white;
+  background-color: #34393f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.info-panel-close:hover {
+  background-color: #2b2e31;
+}
