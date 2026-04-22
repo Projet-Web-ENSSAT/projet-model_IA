@@ -27,6 +27,10 @@ export function getPlanetCacheContext() {
         .join('\n\n');
 }
 
+export function clearPlanetCacheContext() {
+    cache.clear();
+}
+
 export async function getPlanetAnecdote(planetName) {
     if (cache.has('anecdote_' + planetName)) return cache.get('anecdote_' + planetName);
 

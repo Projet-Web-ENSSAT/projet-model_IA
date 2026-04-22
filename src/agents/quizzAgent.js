@@ -1,5 +1,5 @@
 import { complete } from "../lib/llmClient";
-import { getPlanetCacheContext } from "./planetAgent";
+import { clearPlanetCacheContext, getPlanetCacheContext } from "./planetAgent";
 
 const SYSTEM_PROMPT = `Tu es un agent spécialisé dans les questionnaires ludiques et éducatifs pour enfants.
 Tu réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ni après, sans balises markdown.
@@ -15,9 +15,12 @@ export async function generateQuiz() {
 
         const messages = [
             {role: 'user', content: userContent}
-     ];
+        ];
 
-        return await complete(messages, {systemPrompt: SYSTEM_PROMPT, temperature: 0.8});
+        const responses = await complete(messages, {systemPrompt: SYSTEM_PROMPT, temperature: 0.8});
+        clearPlanetCacheContext();
+
+        return responses;
     } else {
         throw new Error('Aucun contexte disponible pour les planètes. Impossible de générer le quiz.');
     }  
