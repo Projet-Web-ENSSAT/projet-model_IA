@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../SimulationContext";
 
 const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const jupiterRef = useRef();
   const fbx = useFBX("/src/assets/model/jupiter/source/Jupiter.fbx");
   const texture = useTexture(
@@ -22,19 +24,32 @@ const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1 }) => {
     });
   }, [fbx, texture]);
 
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime() * orbitSpeed;
-    if (jupiterRef.current) {
-      jupiterRef.current.position.set(
-        Math.cos(t) * orbitRadius,
-        0,
-        Math.sin(t) * orbitRadius,
-      );
-      jupiterRef.current.rotation.y += 0.005;
+  useFrame((state, delta) => {
+    if (!paused) {
+      const t = state.clock.getElapsedTime() * orbitSpeed;
+      if (jupiterRef.current) {
+        jupiterRef.current.position.set(
+          Math.cos(t) * orbitRadius,
+          0,
+          Math.sin(t) * orbitRadius,
+        );
+      }
     }
+    if (jupiterRef.current) jupiterRef.current.rotation.y += delta * 0.3;
   });
 
-  return <primitive ref={jupiterRef} object={fbx} scale={scale} />;
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (!onPlanetClick || !jupiterRef.current) return;
+    const pos = new THREE.Vector3();
+    jupiterRef.current.getWorldPosition(pos);
+    const box = new THREE.Box3().setFromObject(jupiterRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Jupiter", pos, sphere.radius);
+  };
+
+  return <primitive ref={jupiterRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 
 export default Jupiter;

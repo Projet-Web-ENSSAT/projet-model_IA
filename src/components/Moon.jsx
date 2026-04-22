@@ -2,7 +2,6 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-
 const Moon = ({ scale = 0.0012, position = [0, 0, 0] }) => {
   const moonRef = useRef();
   const fbx = useFBX("/src/assets/model/moon/source/Moon.fbx");

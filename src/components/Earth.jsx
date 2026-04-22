@@ -24,10 +24,8 @@ const Earth = ({ scale = 0.005 }) => {
 
   // ON NE CALCULE PLUS L'ORBITE ICI
   // On garde juste la rotation sur elle-même (l'axe Y)
-  useFrame((state, delta) => {
-    if (earthRef.current) {
-      earthRef.current.rotation.y += delta * 0.2;
-    }
+  useFrame((_, delta) => {
+    if (earthRef.current) earthRef.current.rotation.y += delta * 0.2;
   });
 
   // IMPORTANT : position={[0, 0, 0]} pour qu'elle reste au centre de son groupe parent
