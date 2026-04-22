@@ -14,6 +14,7 @@ import Jupiter from "./components/Jupiter";
 import Saturn from "./components/Saturn";
 import Uranus from "./components/Uranus";
 import Neptune from "./components/Neptune";
+import { getPlanetAnecdote, getPlanetDescription } from "./agents/planetAgent";
 
 function CameraController({ zoomTarget, zoomRadius, onReturnComplete }) {
   const { camera } = useThree();
@@ -67,6 +68,7 @@ function CameraController({ zoomTarget, zoomRadius, onReturnComplete }) {
 export default function Scene() {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [orbitEnabled, setOrbitEnabled] = useState(true);
+  const [infoPanel, setInfoPanel] = useState(null); // { title, content, loading }
 
   const handlePlanetClick = useCallback((name, worldPos, zoomRadius) => {
     setSelectedPlanet({ name, pos: worldPos.clone(), zoomRadius });
@@ -75,11 +77,26 @@ export default function Scene() {
 
   const handleReturn = useCallback(() => {
     setSelectedPlanet(null);
+    setInfoPanel(null);
   }, []);
 
   const handleReturnComplete = useCallback(() => {
     setOrbitEnabled(true);
   }, []);
+
+  const handleAnecdoteClick = () => {
+    setInfoPanel({ title: "Anecdote", content: null, loading: true });
+    getPlanetAnecdote(selectedPlanet.name).then((anecdote) => {
+      setInfoPanel({ title: "Anecdote", content: anecdote, loading: false });
+    });
+  };
+
+  const handleCharacteristicsClick = () => {
+    setInfoPanel({ title: "Caractéristiques", content: null, loading: true });
+    getPlanetDescription(selectedPlanet.name).then((desc) => {
+      setInfoPanel({ title: "Caractéristiques", content: desc, loading: false });
+    });
+  };
 
   return (
     <SimulationContext.Provider value={{ paused: !!selectedPlanet, onPlanetClick: handlePlanetClick }}>
@@ -110,6 +127,41 @@ export default function Scene() {
             >
               ← Retour
             </button>
+
+            <button
+              onClick={handleAnecdoteClick}
+              style={{
+                padding: "8px 18px",
+                background: "rgba(255,255,255,0.12)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.35)",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontSize: 14,
+                backdropFilter: "blur(6px)",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Anecdotes
+            </button>
+
+            <button
+              onClick={handleCharacteristicsClick}
+              style={{
+                padding: "8px 18px",
+                background: "rgba(255,255,255,0.12)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.35)",
+                borderRadius: 8,
+                cursor: "pointer",
+                fontSize: 14,
+                backdropFilter: "blur(6px)",
+                letterSpacing: "0.03em",
+              }}
+            >
+              Caractéristiques
+            </button>
+
             <span style={{
               color: "white",
               fontSize: 20,
@@ -119,6 +171,60 @@ export default function Scene() {
             }}>
               {selectedPlanet.name}
             </span>
+          </div>
+        )}
+
+        {infoPanel && (
+          <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 20,
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            color: "white",
+            padding: "30px",
+            width: "700px",
+            maxWidth: "90vw",
+            maxHeight: "70vh",
+            borderRadius: "10px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            overflowY: "auto",
+          }}>
+            <h2 style={{
+              fontFamily: "'Orbitron', sans-serif",
+              fontSize: "28px",
+              margin: 0,
+            }}>
+              {selectedPlanet.name} — {infoPanel.title}
+            </h2>
+            <p style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: "16px",
+              lineHeight: "1.6",
+              margin: 0,
+              whiteSpace: "pre-wrap",
+            }}>
+              {infoPanel.loading ? "Chargement…" : infoPanel.content}
+            </p>
+            <button
+              onClick={() => setInfoPanel(null)}
+              style={{
+                alignSelf: "flex-start",
+                padding: "10px 24px",
+                fontSize: "15px",
+                color: "white",
+                backgroundColor: "#34393f",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontFamily: "'Orbitron', sans-serif",
+              }}
+            >
+              Fermer
+            </button>
           </div>
         )}
 
