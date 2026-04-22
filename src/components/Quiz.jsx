@@ -14,12 +14,6 @@ function parseQuiz(raw) {
     }
 }
 
-const btnStyle = (active) => ({
-    padding: '8px 20px', background: active ? '#4a90e2' : '#ccc',
-    color: 'white', border: 'none', borderRadius: '6px',
-    cursor: active ? 'pointer' : 'default',
-});
-
 export default function Quiz({ raw }) {
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -27,19 +21,15 @@ export default function Quiz({ raw }) {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
 
-    if (!raw) return (
-        <div style={{ padding: '1rem', border: '1px dashed #ccc', borderRadius: '8px', color: '#999', textAlign: 'center' }}>
-            Génère un quiz pour commencer
-        </div>
-    );
+    if (!raw) return null;
 
     const questions = parseQuiz(raw);
-    if (questions.length === 0) return <pre style={{ whiteSpace: 'pre-wrap' }}>{raw}</pre>;
+    if (questions.length === 0) return null;
 
     if (finished) return (
-        <div style={{ textAlign: 'center', padding: '1rem' }}>
-            <p style={{ fontSize: '1.4em', fontWeight: 'bold' }}>Quiz terminé !</p>
-            <p style={{ fontSize: '1.1em' }}>Score : {score} / {questions.length}</p>
+        <div className="quiz-score">
+            <p className="quiz-score-title">Quiz terminé !</p>
+            <p className="quiz-score-result">Score : {score} / {questions.length}</p>
         </div>
     );
 
@@ -59,18 +49,20 @@ export default function Quiz({ raw }) {
     }
 
     return (
-        <div>
-            <p style={{ color: '#888', fontSize: '0.9em', marginBottom: '0.5rem' }}>
-                Question {current + 1} / {questions.length}
-            </p>
+        <div className="quiz-body">
+            <p className="quiz-progress">Question {current + 1} / {questions.length}</p>
             <Question
-                question={q.question} choices={q.choices} answer={q.answer}
-                selected={selected} confirmed={confirmed} onSelect={setSelected}
+                question={q.question}
+                choices={q.choices}
+                answer={q.answer}
+                selected={selected}
+                confirmed={confirmed}
+                onSelect={setSelected}
             />
-            <div style={{ marginTop: '1rem' }}>
+            <div className="quiz-actions">
                 {!confirmed
-                    ? <button disabled={!selected} onClick={handleConfirm} style={btnStyle(!!selected)}>Valider</button>
-                    : <button onClick={handleNext} style={btnStyle(true)}>{isLast ? 'Voir le score' : 'Question suivante'}</button>
+                    ? <button className={`quiz-btn${selected ? ' quiz-btn--active' : ''}`} disabled={!selected} onClick={handleConfirm}>Valider</button>
+                    : <button className="quiz-btn quiz-btn--active" onClick={handleNext}>{isLast ? 'Voir le score' : 'Question suivante'}</button>
                 }
             </div>
         </div>

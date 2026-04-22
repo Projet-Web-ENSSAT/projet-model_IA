@@ -16,6 +16,8 @@ import Saturn from "./components/Saturn";
 import Uranus from "./components/Uranus";
 import Neptune from "./components/Neptune";
 import { getPlanetAnecdote, getPlanetDescription } from "./agents/planetAgent";
+import { generateQuiz } from "./agents/quizzAgent";
+import Quiz from "./components/Quiz";
 
 function CameraController({ zoomTarget, zoomRadius, onReturnComplete }) {
   const { camera } = useThree();
@@ -80,6 +82,7 @@ export default function Scene() {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [orbitEnabled, setOrbitEnabled] = useState(true);
   const [infoPanel, setInfoPanel] = useState(null);
+  const [quizPanel, setQuizPanel] = useState({ open: false, raw: null, error: null, loading: false });
 
   const handlePlanetClick = useCallback((name, worldPos, zoomRadius) => {
     setSelectedPlanet({ name, pos: worldPos.clone(), zoomRadius });
@@ -109,9 +112,20 @@ export default function Scene() {
     });
   };
 
+  const handleQuizClick = () => {
+    setQuizPanel({ open: true, raw: null, error: null, loading: true });
+    generateQuiz()
+      .then((raw) => setQuizPanel({ open: true, raw, error: null, loading: false }))
+      .catch((e) => setQuizPanel({ open: true, raw: null, error: e.message, loading: false }));
+  };
+
   return (
     <SimulationContext.Provider value={{ paused: !!selectedPlanet, onPlanetClick: handlePlanetClick }}>
       <div className="scene-container">
+        <div className="global-toolbar">
+          <button className="toolbar-btn" onClick={handleQuizClick}>Quiz</button>
+        </div>
+
         {selectedPlanet && (
           <div className="planet-toolbar">
             <button className="toolbar-btn" onClick={handleReturn}>← Retour</button>
@@ -128,6 +142,20 @@ export default function Scene() {
               {infoPanel.loading ? "Chargement…" : stripMarkdown(infoPanel.content)}
             </p>
             <button className="info-panel-close" onClick={() => setInfoPanel(null)}>Fermer</button>
+          </div>
+        )}
+
+        {quizPanel.open && (
+          <div className="info-panel">
+            <h2 className="info-panel-title">Quiz</h2>
+            {quizPanel.loading && <p className="info-panel-content">Chargement…</p>}
+            {quizPanel.error && <p className="quiz-error">{quizPanel.error}</p>}
+            {!quizPanel.loading && !quizPanel.error && (
+              <Quiz raw={quizPanel.raw} />
+            )}
+            <button className="info-panel-close" onClick={() => setQuizPanel({ open: false, raw: null, error: null, loading: false })}>
+              Fermer
+            </button>
           </div>
         )}
 

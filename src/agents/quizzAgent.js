@@ -22,6 +22,6 @@ export async function generateQuiz() {
 
         return responses;
     } else {
-        throw new Error('Aucun contexte disponible pour les planètes. Impossible de générer le quiz.');
+        throw new Error(`Vous n'avez pas encore cliqué sur une planète !`);
     }  
 }
