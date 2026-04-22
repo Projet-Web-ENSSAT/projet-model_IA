@@ -2,14 +2,14 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useSimulation } from "../SimulationContext";
+import { useSimulation } from "../../SimulationContext";
 
-const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1 }) => {
+const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
   const { paused, onPlanetClick } = useSimulation();
-  const jupiterRef = useRef();
-  const fbx = useFBX("/src/assets/model/jupiter/source/Jupiter.fbx");
+  const mercuryRef = useRef();
+  const fbx = useFBX("/src/assets/model/mercury/source/Mercury.fbx");
   const texture = useTexture(
-    "/src/assets/model/jupiter/textures/8k_jupiter.jpg",
+    "/src/assets/model/mercury/textures/8k_mercury.jpg",
   );
 
   useMemo(() => {
@@ -27,29 +27,29 @@ const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1 }) => {
   useFrame((state, delta) => {
     if (!paused) {
       const t = state.clock.getElapsedTime() * orbitSpeed;
-      if (jupiterRef.current) {
-        jupiterRef.current.position.set(
+      if (mercuryRef.current) {
+        mercuryRef.current.position.set(
           Math.cos(t) * orbitRadius,
           0,
           Math.sin(t) * orbitRadius,
         );
       }
     }
-    if (jupiterRef.current) jupiterRef.current.rotation.y += delta * 0.3;
+    if (mercuryRef.current) mercuryRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
     e.stopPropagation();
-    if (!onPlanetClick || !jupiterRef.current) return;
+    if (!onPlanetClick || !mercuryRef.current) return;
     const pos = new THREE.Vector3();
-    jupiterRef.current.getWorldPosition(pos);
-    const box = new THREE.Box3().setFromObject(jupiterRef.current);
+    mercuryRef.current.getWorldPosition(pos);
+    const box = new THREE.Box3().setFromObject(mercuryRef.current);
     const sphere = new THREE.Sphere();
     box.getBoundingSphere(sphere);
-    onPlanetClick("Jupiter", pos, sphere.radius);
+    onPlanetClick("Mercure", pos, sphere.radius);
   };
 
-  return <primitive ref={jupiterRef} object={fbx} scale={scale} onClick={handleClick} />;
+  return <primitive ref={mercuryRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 
-export default Jupiter;
+export default Mercury;

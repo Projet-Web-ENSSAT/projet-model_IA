@@ -2,13 +2,15 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useSimulation } from "../SimulationContext";
+import { useSimulation } from "../../SimulationContext";
 
-const Saturn = ({ scale = 0.012, orbitRadius = 17, orbitSpeed = 0.1 }) => {
+const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1 }) => {
   const { paused, onPlanetClick } = useSimulation();
-  const saturnRef = useRef();
-  const fbx = useFBX("/src/assets/model/saturn/source/Saturn.fbx");
-  const texture = useTexture("/src/assets/model/saturn/textures/8k_saturn.jpg");
+  const jupiterRef = useRef();
+  const fbx = useFBX("/src/assets/model/jupiter/source/Jupiter.fbx");
+  const texture = useTexture(
+    "/src/assets/model/jupiter/textures/8k_jupiter.jpg",
+  );
 
   useMemo(() => {
     fbx.traverse((child) => {
@@ -25,29 +27,29 @@ const Saturn = ({ scale = 0.012, orbitRadius = 17, orbitSpeed = 0.1 }) => {
   useFrame((state, delta) => {
     if (!paused) {
       const t = state.clock.getElapsedTime() * orbitSpeed;
-      if (saturnRef.current) {
-        saturnRef.current.position.set(
+      if (jupiterRef.current) {
+        jupiterRef.current.position.set(
           Math.cos(t) * orbitRadius,
           0,
           Math.sin(t) * orbitRadius,
         );
       }
     }
-    if (saturnRef.current) saturnRef.current.rotation.y += delta * 0.3;
+    if (jupiterRef.current) jupiterRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
     e.stopPropagation();
-    if (!onPlanetClick || !saturnRef.current) return;
+    if (!onPlanetClick || !jupiterRef.current) return;
     const pos = new THREE.Vector3();
-    saturnRef.current.getWorldPosition(pos);
-    const box = new THREE.Box3().setFromObject(saturnRef.current);
+    jupiterRef.current.getWorldPosition(pos);
+    const box = new THREE.Box3().setFromObject(jupiterRef.current);
     const sphere = new THREE.Sphere();
     box.getBoundingSphere(sphere);
-    onPlanetClick("Saturne", pos, sphere.radius);
+    onPlanetClick("Jupiter", pos, sphere.radius);
   };
 
-  return <primitive ref={saturnRef} object={fbx} scale={scale} onClick={handleClick} />;
+  return <primitive ref={jupiterRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 
-export default Saturn;
+export default Jupiter;

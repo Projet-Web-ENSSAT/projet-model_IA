@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useSimulation } from "../SimulationContext";
+import { useSimulation } from "../../SimulationContext";
 
 const Venus = ({ scale = 0.0045, orbitRadius = 6, orbitSpeed = 0.3 }) => {
   const { paused, onPlanetClick } = useSimulation();

@@ -2,13 +2,15 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useSimulation } from "../SimulationContext";
+import { useSimulation } from "../../SimulationContext";
 
-const Uranus = ({ scale = 0.008, orbitRadius = 20, orbitSpeed = 0.7 }) => {
+const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5 }) => {
   const { paused, onPlanetClick } = useSimulation();
-  const uranusRef = useRef();
-  const fbx = useFBX("/src/assets/model/uranus/source/Uranus.fbx");
-  const texture = useTexture("/src/assets/model/uranus/textures/uranusmap.jpg");
+  const neptuneRef = useRef();
+  const fbx = useFBX("/src/assets/model/neptune/source/Neptune.fbx");
+  const texture = useTexture(
+    "/src/assets/model/neptune/textures/2k_neptune.jpg",
+  );
 
   useMemo(() => {
     fbx.traverse((child) => {
@@ -25,29 +27,29 @@ const Uranus = ({ scale = 0.008, orbitRadius = 20, orbitSpeed = 0.7 }) => {
   useFrame((state, delta) => {
     if (!paused) {
       const t = state.clock.getElapsedTime() * orbitSpeed;
-      if (uranusRef.current) {
-        uranusRef.current.position.set(
+      if (neptuneRef.current) {
+        neptuneRef.current.position.set(
           Math.cos(t) * orbitRadius,
           0,
           Math.sin(t) * orbitRadius,
         );
       }
     }
-    if (uranusRef.current) uranusRef.current.rotation.y += delta * 0.3;
+    if (neptuneRef.current) neptuneRef.current.rotation.y += delta * 0.3;
   });
 
   const handleClick = (e) => {
     e.stopPropagation();
-    if (!onPlanetClick || !uranusRef.current) return;
+    if (!onPlanetClick || !neptuneRef.current) return;
     const pos = new THREE.Vector3();
-    uranusRef.current.getWorldPosition(pos);
-    const box = new THREE.Box3().setFromObject(uranusRef.current);
+    neptuneRef.current.getWorldPosition(pos);
+    const box = new THREE.Box3().setFromObject(neptuneRef.current);
     const sphere = new THREE.Sphere();
     box.getBoundingSphere(sphere);
-    onPlanetClick("Uranus", pos, sphere.radius);
+    onPlanetClick("Neptune", pos, sphere.radius);
   };
 
-  return <primitive ref={uranusRef} object={fbx} scale={scale} onClick={handleClick} />;
+  return <primitive ref={neptuneRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 
-export default Uranus;
+export default Neptune;

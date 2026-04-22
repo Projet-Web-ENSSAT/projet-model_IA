@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useSimulation } from "../SimulationContext";
+import { useSimulation } from "../../SimulationContext";
 
 const Sun = ({ scale = 0.08, position = [0, 0, 0] }) => {
   const { onPlanetClick } = useSimulation();
