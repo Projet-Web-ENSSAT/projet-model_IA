@@ -65,6 +65,16 @@ function CameraController({ zoomTarget, zoomRadius, onReturnComplete }) {
   return null;
 }
 
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^\s*[-*•]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .trim();
+}
+
 export default function Scene() {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [orbitEnabled, setOrbitEnabled] = useState(true);
@@ -197,6 +207,7 @@ export default function Scene() {
               fontFamily: "'Orbitron', sans-serif",
               fontSize: "28px",
               margin: 0,
+              color: "white",
             }}>
               {selectedPlanet.name} — {infoPanel.title}
             </h2>
@@ -207,7 +218,7 @@ export default function Scene() {
               margin: 0,
               whiteSpace: "pre-wrap",
             }}>
-              {infoPanel.loading ? "Chargement…" : infoPanel.content}
+              {infoPanel.loading ? "Chargement…" : stripMarkdown(infoPanel.content)}
             </p>
             <button
               onClick={() => setInfoPanel(null)}
