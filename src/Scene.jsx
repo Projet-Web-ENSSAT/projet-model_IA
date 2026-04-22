@@ -1,9 +1,10 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
-import { Suspense } from "react";
+import { Suspense, useState, useCallback, useRef } from "react";
+import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { SimulationContext } from "./SimulationContext";
 
-// Tes imports
 import Sun from "./components/Sun";
 import Mercury from "./components/Mercury";
 import Venus from "./components/Venus";
@@ -13,10 +14,75 @@ import Jupiter from "./components/Jupiter";
 import Saturn from "./components/Saturn";
 import Uranus from "./components/Uranus";
 import Neptune from "./components/Neptune";
-import Spaceship from "./components/Spaceship"; // Ton nouveau composant
+import Spaceship from "./components/Spaceship";
 import BackgroundMusic from "./components/BackgroundMusic";
 
+function CameraController({ zoomTarget, zoomRadius, onReturnComplete }) {
+  const { camera } = useThree();
+  const savedPos = useRef(null);
+  const savedQuat = useRef(null);
+  const approachDir = useRef(null);
+  const wasZoomed = useRef(false);
+  const mat = useRef(new THREE.Matrix4());
+  const targetQuat = useRef(new THREE.Quaternion());
+
+  useFrame(() => {
+    if (zoomTarget) {
+      if (!wasZoomed.current) {
+        savedPos.current = camera.position.clone();
+        savedQuat.current = camera.quaternion.clone();
+        approachDir.current = camera.position.clone().sub(zoomTarget).normalize();
+        wasZoomed.current = true;
+      }
+
+      // Distance = 2× le rayon visuel pour voir la planète entière (FOV 20°)
+      const dist = Math.max(1, zoomRadius * 2.5);
+      const desiredPos = zoomTarget.clone().add(
+        approachDir.current.clone().multiplyScalar(dist)
+      );
+
+      camera.position.lerp(desiredPos, 0.06);
+
+      // Matrix4.lookAt(eye, target, up) → convention caméra (-Z vers la cible)
+      mat.current.lookAt(camera.position, zoomTarget, camera.up);
+      targetQuat.current.setFromRotationMatrix(mat.current);
+      camera.quaternion.slerp(targetQuat.current, 0.08);
+    } else if (wasZoomed.current && savedPos.current) {
+      camera.position.lerp(savedPos.current, 0.06);
+      camera.quaternion.slerp(savedQuat.current, 0.06);
+
+      if (camera.position.distanceTo(savedPos.current) < 0.12) {
+        camera.position.copy(savedPos.current);
+        camera.quaternion.copy(savedQuat.current);
+        wasZoomed.current = false;
+        approachDir.current = null;
+        savedPos.current = null;
+        savedQuat.current = null;
+        onReturnComplete();
+      }
+    }
+  });
+
+  return null;
+}
+
 export default function Scene() {
+  const [selectedPlanet, setSelectedPlanet] = useState(null);
+  const [orbitEnabled, setOrbitEnabled] = useState(true);
+
+  const handlePlanetClick = useCallback((name, worldPos, zoomRadius) => {
+    setSelectedPlanet({ name, pos: worldPos.clone(), zoomRadius });
+    setOrbitEnabled(false);
+  }, []);
+
+  const handleReturn = useCallback(() => {
+    setSelectedPlanet(null);
+  }, []);
+
+  const handleReturnComplete = useCallback(() => {
+    setOrbitEnabled(true);
+  }, []);
+
   return (
     <div
       style={{

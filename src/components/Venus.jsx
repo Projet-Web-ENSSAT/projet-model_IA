@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../SimulationContext";
 
 const Venus = ({ scale = 0.0045, orbitRadius = 6, orbitSpeed = 0.3 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const venusRef = useRef();
   const fbx = useFBX("/src/assets/model/venus/source/Venus.fbx");
   const texture = useTexture(
@@ -22,18 +24,31 @@ const Venus = ({ scale = 0.0045, orbitRadius = 6, orbitSpeed = 0.3 }) => {
     });
   }, [fbx, texture]);
 
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime() * orbitSpeed;
-    if (venusRef.current) {
-      venusRef.current.position.set(
-        Math.cos(t) * orbitRadius,
-        0,
-        Math.sin(t) * orbitRadius,
-      );
-      venusRef.current.rotation.y += 0.005;
+  useFrame((state, delta) => {
+    if (!paused) {
+      const t = state.clock.getElapsedTime() * orbitSpeed;
+      if (venusRef.current) {
+        venusRef.current.position.set(
+          Math.cos(t) * orbitRadius,
+          0,
+          Math.sin(t) * orbitRadius,
+        );
+      }
     }
+    if (venusRef.current) venusRef.current.rotation.y += delta * 0.3;
   });
 
-  return <primitive ref={venusRef} object={fbx} scale={scale} />;
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (!onPlanetClick || !venusRef.current) return;
+    const pos = new THREE.Vector3();
+    venusRef.current.getWorldPosition(pos);
+    const box = new THREE.Box3().setFromObject(venusRef.current);
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    onPlanetClick("Vénus", pos, sphere.radius);
+  };
+
+  return <primitive ref={venusRef} object={fbx} scale={scale} onClick={handleClick} />;
 };
 export default Venus;
