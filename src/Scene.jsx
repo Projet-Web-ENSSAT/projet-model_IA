@@ -35,7 +35,7 @@ export default function Scene() {
           radius={150}
           depth={50}
           count={7000}
-          factor={4}
+          factor={6}
           saturation={0}
           fade
         />
@@ -46,7 +46,7 @@ export default function Scene() {
         {/* Lumière principale venant du Soleil */}
         <pointLight
           position={[0, 0, 0]}
-          intensity={60}
+          intensity={40}
           distance={100}
           decay={1}
         />
