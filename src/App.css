@@ -1,4 +1,6 @@
 /* Dans ton fichier CSS */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap');
+
 body,
 html,
 #root {
@@ -27,12 +29,14 @@ html,
 .title {
   font-size: 36px;
   margin-bottom: 60px;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .description {
   font-size: 18px;
   line-height: 1.5;
   margin-bottom: 50px;
+  font-family: 'Space Mono', monospace;
 }
 
 .button {
@@ -43,6 +47,7 @@ html,
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
 }
 .button:hover {
   background-color: #2b2e31;

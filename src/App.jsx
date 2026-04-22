@@ -17,7 +17,7 @@ function App() {
             className="button"
             onClick={() => setShowIntro(false)}
           >
-            Explore maintenant 
+            Explorez maintenant 
           </button>
         </div>
       )}
