@@ -15,6 +15,8 @@ import Jupiter from "./components/Planets/Jupiter";
 import Saturn from "./components/Planets/Saturn";
 import Uranus from "./components/Planets/Uranus";
 import Neptune from "./components/Planets/Neptune";
+import Spaceship from "./components/Planets/Spaceship";
+import BackgroundMusic from "./components/BackgroundMusic";
 import { getPlanetAnecdote, getPlanetDescription } from "./agents/planetAgent";
 import { generateQuiz } from "./agents/quizzAgent";
 import Quiz from "./components/Quiz";
@@ -159,22 +161,25 @@ export default function Scene() {
           </div>
         )}
 
-        <Canvas camera={{ position: [0, 25, 35], fov: 20 }}>
-          <Stars radius={100} count={5000} factor={4} fade />
+        <BackgroundMusic fileName="star_wars.mp3" />
+
+        <Canvas camera={{ position: [0, 20, 50], fov: 15 }}>
+          <Stars radius={150} depth={50} count={7000} factor={6} saturation={0} fade />
           <ambientLight intensity={0.8} />
-          <pointLight position={[0, 0, 0]} intensity={50} />
+          <pointLight position={[0, 0, 0]} intensity={40} distance={100} decay={1} />
           <Suspense fallback={null}>
-            <Sun scale={0.08} />
-            <Mercury orbitRadius={4} orbitSpeed={0.8} scale={0.003} />
-            <Venus orbitRadius={6} orbitSpeed={0.6} scale={0.0045} />
-            <EarthSystem orbitRadius={8} orbitSpeed={0.4} />
-            <Mars orbitRadius={10} orbitSpeed={0.3} scale={0.004} />
-            <Jupiter orbitRadius={13} orbitSpeed={0.15} scale={0.015} />
-            <Saturn orbitRadius={17} orbitSpeed={0.1} scale={0.012} />
-            <Uranus orbitRadius={20} orbitSpeed={0.07} scale={0.008} />
-            <Neptune orbitRadius={23} orbitSpeed={0.05} scale={0.008} />
+            <Sun scale={0.07} />
+            <Mercury orbitRadius={5} orbitSpeed={0.8} scale={0.003} />
+            <Venus orbitRadius={8} orbitSpeed={0.6} scale={0.0045} />
+            <EarthSystem orbitRadius={11} orbitSpeed={0.4} />
+            <Mars orbitRadius={15} orbitSpeed={0.3} scale={0.004} />
+            <Jupiter orbitRadius={20} orbitSpeed={0.15} scale={0.015} />
+            <Saturn orbitRadius={26} orbitSpeed={0.1} scale={0.012} />
+            <Uranus orbitRadius={31} orbitSpeed={0.07} scale={0.008} />
+            <Neptune orbitRadius={36} orbitSpeed={0.05} scale={0.008} />
+            <Spaceship scale={0.0009} />
             <EffectComposer>
-              <Bloom luminanceThreshold={1} intensity={0.7} mipmapBlur />
+              <Bloom luminanceThreshold={1} intensity={1.2} mipmapBlur radius={0.3} />
             </EffectComposer>
           </Suspense>
           <CameraController
@@ -183,12 +188,7 @@ export default function Scene() {
             onReturnComplete={handleReturnComplete}
           />
           {orbitEnabled && (
-            <OrbitControls
-              makeDefault
-              minDistance={10}
-              maxDistance={60}
-              maxPolarAngle={Math.PI / 2.5}
-            />
+            <OrbitControls makeDefault minDistance={10} maxDistance={80} />
           )}
         </Canvas>
       </div>

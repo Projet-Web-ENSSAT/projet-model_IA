@@ -8,17 +8,18 @@ const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5 }) => {
   const { paused, onPlanetClick } = useSimulation();
   const neptuneRef = useRef();
   const fbx = useFBX("/src/assets/model/neptune/source/Neptune.fbx");
-  const texture = useTexture(
-    "/src/assets/model/neptune/textures/2k_neptune.jpg",
-  );
+  const texture = useTexture("/src/assets/model/neptune/textures/Neptune.jpg");
 
   useMemo(() => {
     fbx.traverse((child) => {
       if (child.isMesh) {
         child.material = new THREE.MeshStandardMaterial({
           map: texture,
-          roughness: 0.8,
-          metalness: 0.1,
+          roughness: 0.3,
+          metalness: 0.2,
+          emissiveMap: texture,
+          emissiveIntensity: 0.5,
+          emissive: new THREE.Color("#0044ff"),
         });
       }
     });

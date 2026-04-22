@@ -1,73 +1,56 @@
-import React, { useRef, useMemo } from "react";
-import { useFBX, useTexture } from "@react-three/drei";
+import React, { useRef } from "react";
+import { useLoader } from "@react-three/fiber";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const Spaceship = ({
-  modelPath = "/src/assets/model/star-wars-halcon-milenario/", // Chemin vers ton FBX (dans public/)
-  texturePath = null, // Optionnel : texture si nécessaire
-  scale = 0.001, // Échelle à adapter selon ton modèle
-  orbitRadius = 8, // Distance par rapport au centre (Soleil)
-  orbitSpeed = 0.15, // Vitesse de rotation (radians par seconde)
-}) => {
-  const spaceshipRef = useRef();
+const Spaceship = ({ scale = 0.0005 }) => {
+  const shipRef = useRef();
 
-  // 1. Charger le modèle
-  const fbx = useFBX(modelPath);
+  // 1. Chargement avec tes chemins exacts
+  // IMPORTANT : Assure-toi que les fichiers .jpeg sont dans le même dossier que le .mtl
+  const materials = useLoader(
+    MTLLoader,
+    "/src/assets/model/star-wars-halcon-milenario/source/Halcon_Milenario/Halcon_Milenario.mtl",
+  );
 
-  // 2. Charger la texture (optionnel, si ton FBX n'en a pas déjà de liées)
-  const texture = texturePath ? useTexture(texturePath) : null;
+  const obj = useLoader(
+    OBJLoader,
+    "/src/assets/model/star-wars-halcon-milenario/source/Halcon_Milenario/Halcon_Milenario.obj",
+    (loader) => {
+      materials.preload();
+      loader.setMaterials(materials);
+    },
+  );
 
-  // 3. Appliquer un matériau propre
-  useMemo(() => {
-    fbx.traverse((child) => {
-      if (child.isMesh) {
-        if (texture) {
-          child.material = new THREE.MeshStandardMaterial({
-            map: texture,
-            metalness: 0.8, // Aspect métallique pour un vaisseau
-            roughness: 0.2,
-          });
-        } else {
-          // Si pas de texture fournie, on utilise le matériau d'origine mais on booste l'aspect métal
-          child.material.metalness = 0.8;
-          child.material.roughness = 0.2;
-        }
-      }
-    });
-  }, [fbx, texture]);
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime() * 0.15; // Vitesse de croisière
 
-  // 4. LOGIQUE D'ANIMATION (Le mouvement !)
-  useFrame((state, delta) => {
-    // 'delta' est le temps écoulé depuis la dernière image, en secondes.
-    // 'state.clock.elapsedTime' est le temps total écoulé depuis le début.
+    if (shipRef.current) {
+      // NAVIGATION LIBRE (Trajectoire non-circulaire)
+      // On combine des fonctions pour que le vaisseau se balade dans le système
+      const x = Math.sin(t * 0.7) * 22 + Math.cos(t * 0.3) * 5;
+      const y = Math.cos(t * 0.5) * 4; // Il monte et descend
+      const z = Math.cos(t * 0.6) * 18 + Math.sin(t * 0.2) * 10;
 
-    if (spaceshipRef.current) {
-      const time = state.clock.elapsedTime * orbitSpeed;
+      // Calcul de la direction (LookAt)
+      // On anticipe la position suivante (t + 0.01) pour orienter le cockpit
+      const nextT = t + 0.01;
+      const targetX = Math.sin(nextT * 0.7) * 22 + Math.cos(nextT * 0.3) * 5;
+      const targetY = Math.cos(nextT * 0.5) * 4;
+      const targetZ = Math.cos(nextT * 0.6) * 18 + Math.sin(nextT * 0.2) * 10;
 
-      // Calcul de la position circulaire (cosinus/sinus)
-      // On le fait orbiter dans le plan horizontal (X-Z)
-      const x = Math.cos(time) * orbitRadius;
-      const z = Math.sin(time) * orbitRadius;
-      const y = Math.sin(time * 2) * 0.5; // Petite oscillation verticale pour le fun
+      shipRef.current.position.set(x, y, z);
+      shipRef.current.lookAt(targetX, targetY, targetZ);
 
-      // Appliquer la nouvelle position
-      spaceshipRef.current.position.set(x, y, z);
-
-      // ORIENTATION : Le vaisseau doit regarder vers l'avant de sa trajectoire
-      // La direction instantanée est tangente au cercle : (-sin(t), 0, cos(t))
-      spaceshipRef.current.lookAt(x - Math.sin(time), y, z + Math.cos(time));
+      // LE "ROLL" (Inclinaison de pilotage)
+      // Le vaisseau penche sur le côté en fonction de la courbe
+      shipRef.current.rotation.z += Math.sin(t * 0.7) * 0.5;
     }
   });
 
-  return (
-    <primitive
-      ref={spaceshipRef}
-      object={fbx}
-      scale={scale}
-      position={[orbitRadius, 0, 0]} // Position initiale
-    />
-  );
+  return <primitive ref={shipRef} object={obj} scale={scale} />;
 };
 
 export default Spaceship;

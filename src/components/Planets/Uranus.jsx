@@ -15,8 +15,11 @@ const Uranus = ({ scale = 0.008, orbitRadius = 20, orbitSpeed = 0.7 }) => {
       if (child.isMesh) {
         child.material = new THREE.MeshStandardMaterial({
           map: texture,
-          roughness: 0.8,
+          roughness: 0.3,
           metalness: 0.1,
+          emissiveMap: texture,
+          emissiveIntensity: 0.2,
+          emissive: new THREE.Color("#66ccff"),
         });
       }
     });
