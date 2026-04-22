@@ -3,10 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import Earth from "./Earth";
 import Moon from "./Moon";
-import { useSimulation } from "../../SimulationContext";
 
-const EarthSystem = ({ orbitRadius = 8, orbitSpeed = 0.4 }) => {
-  const { paused, onPlanetClick } = useSimulation();
+const EarthSystem = ({ orbitRadius = 8, orbitSpeed = 0.4, paused, onPlanetClick }) => {
   const groupRef = useRef();
   const moonOrbitRef = useRef();
 

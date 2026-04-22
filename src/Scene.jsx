@@ -3,7 +3,6 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import { Suspense, useState, useCallback, useRef } from "react";
 import * as THREE from "three";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import { SimulationContext } from "./SimulationContext";
 import "./css/Scene.css";
 
 import Sun from "./components/Planets/Sun";
@@ -121,9 +120,10 @@ export default function Scene() {
       .catch((e) => setQuizPanel({ open: true, raw: null, error: e.message, loading: false }));
   };
 
+  const paused = !!selectedPlanet;
+
   return (
-    <SimulationContext.Provider value={{ paused: !!selectedPlanet, onPlanetClick: handlePlanetClick }}>
-      <div className="scene-container">
+    <div className="scene-container">
         <div className="global-toolbar">
           <button className="toolbar-btn" onClick={handleQuizClick}>Quiz</button>
         </div>
@@ -168,15 +168,15 @@ export default function Scene() {
           <ambientLight intensity={0.8} />
           <pointLight position={[0, 0, 0]} intensity={40} distance={100} decay={1} />
           <Suspense fallback={null}>
-            <Sun scale={0.07} />
-            <Mercury orbitRadius={5} orbitSpeed={0.8} scale={0.003} />
-            <Venus orbitRadius={8} orbitSpeed={0.6} scale={0.0045} />
-            <EarthSystem orbitRadius={11} orbitSpeed={0.4} />
-            <Mars orbitRadius={15} orbitSpeed={0.3} scale={0.004} />
-            <Jupiter orbitRadius={20} orbitSpeed={0.15} scale={0.015} />
-            <Saturn orbitRadius={26} orbitSpeed={0.1} scale={0.012} />
-            <Uranus orbitRadius={31} orbitSpeed={0.07} scale={0.008} />
-            <Neptune orbitRadius={36} orbitSpeed={0.05} scale={0.008} />
+            <Sun scale={0.07} onPlanetClick={handlePlanetClick} />
+            <Mercury orbitRadius={5} orbitSpeed={0.8} scale={0.003} paused={paused} onPlanetClick={handlePlanetClick} />
+            <Venus orbitRadius={8} orbitSpeed={0.6} scale={0.0045} paused={paused} onPlanetClick={handlePlanetClick} />
+            <EarthSystem orbitRadius={11} orbitSpeed={0.4} paused={paused} onPlanetClick={handlePlanetClick} />
+            <Mars orbitRadius={15} orbitSpeed={0.3} scale={0.004} paused={paused} onPlanetClick={handlePlanetClick} />
+            <Jupiter orbitRadius={20} orbitSpeed={0.15} scale={0.015} paused={paused} onPlanetClick={handlePlanetClick} />
+            <Saturn orbitRadius={26} orbitSpeed={0.1} scale={0.012} paused={paused} onPlanetClick={handlePlanetClick} />
+            <Uranus orbitRadius={31} orbitSpeed={0.07} scale={0.008} paused={paused} onPlanetClick={handlePlanetClick} />
+            <Neptune orbitRadius={36} orbitSpeed={0.05} scale={0.008} paused={paused} onPlanetClick={handlePlanetClick} />
             <Spaceship scale={0.0009} />
             <EffectComposer>
               <Bloom luminanceThreshold={1} intensity={1.2} mipmapBlur radius={0.3} />
@@ -191,7 +191,6 @@ export default function Scene() {
             <OrbitControls makeDefault minDistance={10} maxDistance={80} />
           )}
         </Canvas>
-      </div>
-    </SimulationContext.Provider>
+    </div>
   );
 }

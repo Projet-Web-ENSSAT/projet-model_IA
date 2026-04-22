@@ -2,10 +2,8 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useSimulation } from "../../SimulationContext";
 
-const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5 }) => {
-  const { paused, onPlanetClick } = useSimulation();
+const Neptune = ({ scale = 0.007, orbitRadius = 36, orbitSpeed = 0.5, paused, onPlanetClick }) => {
   const neptuneRef = useRef();
   const fbx = useFBX("/src/assets/model/neptune/source/Neptune.fbx");
   const texture = useTexture("/src/assets/model/neptune/textures/Neptune.jpg");
