@@ -3,6 +3,7 @@ import { Stars, OrbitControls, Html } from "@react-three/drei";
 import { Suspense, useRef, useState, useMemo } from "react";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
+import { getDailyHoroscope } from "./agents/horoscopeAgent";
 //import { getDailyHoroscope } from "./agents/horoscopeAgent";
 
 const CONSTELLATIONS = [
@@ -305,44 +306,20 @@ function HoroscopeContent({ constellation }) {
   const [today, setToday] = useState(null);
   const [loading, setLoading] = useState(false);
   const [started, setStarted] = useState(false);
-
-  // const fetchHoroscope = async () => {
-  //   setLoading(true);
-  //   setStarted(true);
-  //   const date = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-
-  //   try {
-  //     const response = await fetch("https://api.anthropic.com/v1/messages", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         model: "claude-sonnet-4-20250514",
-  //         max_tokens: 300,
-  //         system: `You are a mystical, poetic astrologer. Respond with ONLY a plain string — no JSON, no markdown, no labels. Write 2-3 sentences of cosmic energy and advice for ${constellation.name} today, ${date}. Cover love, work, and health. Be poetic and specific.`,
-  //         messages: [{ role: "user", content: `Today's horoscope for ${constellation.name} (${constellation.element} sign).` }],
-  //       }),
-  //     });
-  //     const data = await response.json();
-  //     setToday(data.content?.[0]?.text || "The stars are silent tonight.");
-  //   } catch (e) {
-  //     setToday("The stars are silent tonight. Try again.");
-  //   }
-  //   setLoading(false);
-  // };
-
-    const fetchHoroscope = async () => {
-  setLoading(true);
-  setStarted(true);
-  const date = new Date().toLocaleDateString("fr-FR", {
-    weekday: "long", year: "numeric", month: "long", day: "numeric",
-  });
-  try {
-    const raw = await getDailyHoroscope(constellation.name, date);
-    setToday(raw);
-  } catch (e) {
-    setToday("Les étoiles sont silencieuses ce soir.");
-  }
-  setLoading(false);
+  const fetchHoroscope = async () => {
+    setLoading(true);
+    setStarted(true);
+    const date = new Date().toLocaleDateString("fr-FR", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric",
+    });
+    try {
+      const raw = await getDailyHoroscope(constellation.name, date);
+      setToday(raw);
+    } catch (e) {
+      console.error(e)
+      setToday("Les étoiles sont silencieuses ce soir.");
+    }
+    setLoading(false);
   };
 
   if (!started) {
