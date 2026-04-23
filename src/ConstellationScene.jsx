@@ -3,6 +3,7 @@ import { Stars, OrbitControls } from "@react-three/drei";
 import { Suspense, useState } from "react";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { getDailyHoroscope } from "./agents/horoscopeAgent";
+import { parseMarkdown } from "./lib/parsers";
 import Constellation from "./components/Constellation/Constellation";
 import "./css/ConstellationScene.css";
 
@@ -130,7 +131,7 @@ function HoroscopeContent({ constellation }) {
     });
     try {
       const raw = await getDailyHoroscope(constellation.name, date);
-      setToday(raw);
+      setToday(parseMarkdown(raw));
     } catch (e) {
       console.error(e);
       setToday("Les étoiles sont silencieuses ce soir.");
