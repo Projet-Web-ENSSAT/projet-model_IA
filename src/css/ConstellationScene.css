@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+
+/* ── Scene ─────────────────────────────────────────────────────── */
+
+.constellation-scene {
+  position: fixed;
+  inset: 0;
+}
+
+.constellation-scene__back-btn {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 50;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, color 0.2s;
+}
+
+.constellation-scene__back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.constellation-scene__title {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* ── Constellation label (3D Html overlay) ───────────────────── */
+
+.constellation-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.3s, text-shadow 0.3s;
+  user-select: none;
+}
+
+.constellation-label--hovered {
+  color: var(--constellation-color);
+  text-shadow: 0 0 12px var(--constellation-color);
+}
+
+/* ── Horoscope card ───────────────────────────────────────────── */
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+.horoscope-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  width: 360px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, rgba(5, 5, 20, 0.97) 0%, rgba(15, 10, 40, 0.97) 100%);
+  border: 1px solid color-mix(in srgb, var(--constellation-color) 27%, transparent);
+  border-radius: 16px;
+  box-shadow:
+    0 0 60px color-mix(in srgb, var(--constellation-color) 13%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--constellation-color) 20%, transparent);
+  backdrop-filter: blur(20px);
+  font-family: 'Cinzel', serif;
+  color: #e8e8f0;
+  animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.horoscope-card__close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.horoscope-card__close:hover {
+  color: #ccc;
+}
+
+.horoscope-card__header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.horoscope-card__symbol {
+  font-size: 40px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 16px var(--constellation-color));
+}
+
+.horoscope-card__name {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--constellation-color);
+}
+
+.horoscope-card__dates {
+  margin-top: 4px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #888;
+}
+
+.horoscope-card__element {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.horoscope-card__element-badge {
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--constellation-color) 40%, transparent);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--constellation-color);
+}
+
+.horoscope-card__divider {
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--constellation-color) 13%, transparent);
+  margin: 0 0 20px;
+}
+
+.horoscope-card__section {
+  margin-bottom: 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+}
+
+.horoscope-card__section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.horoscope-card__traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.horoscope-card__trait {
+  padding: 2px 10px;
+  background: color-mix(in srgb, var(--constellation-color) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--constellation-color) 20%, transparent);
+  border-radius: 20px;
+  font-size: 12px;
+  font-style: italic;
+  color: #ccc;
+}
+
+.horoscope-card__mythology {
+  font-size: 13px;
+  font-style: italic;
+  color: #aaa;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Horoscope content (agent) ────────────────────────────────── */
+
+.horoscope-cta {
+  text-align: center;
+}
+
+.horoscope-cta__btn {
+  padding: 10px 24px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--constellation-color) 13%, transparent),
+    color-mix(in srgb, var(--constellation-color) 27%, transparent)
+  );
+  border: 1px solid color-mix(in srgb, var(--constellation-color) 53%, transparent);
+  border-radius: 8px;
+  color: var(--constellation-color);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.horoscope-cta__btn:hover {
+  opacity: 0.85;
+}
+
+.horoscope-loading {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.horoscope-loading__icon {
+  font-size: 24px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.horoscope-loading__text {
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #666;
+}
+
+.horoscope-result__label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--constellation-color);
+  margin-bottom: 8px;
+}
+
+.horoscope-result__text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 300;
+  color: #ddd;
+  margin: 0;
+  line-height: 1.8;
+}

@@ -3,16 +3,15 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import { Suspense } from "react";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 
-// Imports de tes composants
-import Sun from "./components/Sun";
-import Mercury from "./components/Mercury";
-import Venus from "./components/Venus";
-import EarthSystem from "./components/EarthSystem";
-import Mars from "./components/Mars";
-import Jupiter from "./components/Jupiter";
-import Saturn from "./components/Saturn";
-import Uranus from "./components/Uranus";
-import Neptune from "./components/Neptune";
+import Sun from "./components/Planets/Sun";
+import Mercury from "./components/Planets/Mercury";
+import Venus from "./components/Planets/Venus";
+import EarthSystem from "./components/Planets/EarthSystem";
+import Mars from "./components/Planets/Mars";
+import Jupiter from "./components/Planets/Jupiter";
+import Saturn from "./components/Planets/Saturn";
+import Uranus from "./components/Planets/Uranus";
+import Neptune from "./components/Planets/Neptune";
 
 export default function Scene() {
   return (
