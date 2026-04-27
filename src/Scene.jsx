@@ -12,6 +12,8 @@ import Jupiter from "./components/Planets/Jupiter";
 import Saturn from "./components/Planets/Saturn";
 import Uranus from "./components/Planets/Uranus";
 import Neptune from "./components/Planets/Neptune";
+import Spaceship from "./components/Planets/Spaceship";
+import BackgroundMusic from "./components/BackgroundMusic";
 
 export default function Scene() {
   return (
@@ -24,10 +26,18 @@ export default function Scene() {
         height: "100vh",
       }}
     >
+      <BackgroundMusic fileName="star_wars.mp3" />
       <Canvas camera={{ position: [0, 25, 35], fov: 20 }}>
         {" "}
         {/* On monte la caméra pour voir l'arc */}
-        <Stars radius={100} count={5000} factor={4} fade />
+        <Stars
+          radius={150}
+          depth={50}
+          count={7000}
+          factor={4}
+          saturation={0}
+          fade
+        />
         <ambientLight intensity={0.8} />
         <pointLight position={[0, 0, 0]} intensity={50} />
         <Suspense fallback={null}>
@@ -42,6 +52,8 @@ export default function Scene() {
           <Saturn orbitRadius={17} orbitSpeed={0.1} scale={0.012} />
           <Uranus orbitRadius={20} orbitSpeed={0.07} scale={0.008} />
           <Neptune orbitRadius={23} orbitSpeed={0.05} scale={0.008} />
+          {/* LE VAISSEAU : Il navigue librement grâce à son useFrame interne */}
+          <Spaceship scale={0.0009} />
           <EffectComposer>
             <Bloom luminanceThreshold={1} intensity={0.7} mipmapBlur />
           </EffectComposer>
