@@ -1,4 +1,6 @@
 /* Dans ton fichier CSS */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap');
+
 body,
 html,
 #root {
@@ -8,4 +10,45 @@ html,
   height: 100%;
   overflow: hidden; /* Empêche le scroll */
   background-color: black;
+}
+
+.block {
+  position: absolute;
+  color: white;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.9); /* 90% opacity */
+  padding: 30px;
+  width: 1000px;
+  height : 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+.title {
+  font-size: 36px;
+  margin-bottom: 60px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.description {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 50px;
+  font-family: 'Space Mono', monospace;
+}
+
+.button {
+  padding: 15px 30px;
+  font-size: 18px;
+  color: white;
+  background-color: #34393f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+}
+.button:hover {
+  background-color: #2b2e31;
 }
