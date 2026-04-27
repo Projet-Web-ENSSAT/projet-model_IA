@@ -2,7 +2,8 @@ import { complete } from "../lib/llmClient";
 
 const SYSTEM_PROMPT = `Tu es un agent spécialisé dans les planètes du système solaire. 
 Tu peux fournir des descriptions, anecdotes, caractéristiques. 
-Toujours synthétique, ton objectif est de donner des réponses que même un enfant pourrait comprendre.`;
+Toujours synthétique, ton objectif est de donner des réponses que même un enfant pourrait comprendre.
+Réponds en texte brut uniquement : pas d'étoiles (*), pas de gras, pas d'italique, pas de titres (#)`;
 
 const cache = new Map();
 
@@ -24,6 +25,10 @@ export function getPlanetCacheContext() {
     return [...cache.entries()]
         .map(([key, value]) => `[${key}]\n${value}`)
         .join('\n\n');
+}
+
+export function clearPlanetCacheContext() {
+    cache.clear();
 }
 
 export async function getPlanetAnecdote(planetName) {

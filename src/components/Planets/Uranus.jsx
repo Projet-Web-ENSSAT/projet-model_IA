@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../../SimulationContext";
 
-const Uranus = ({ scale = 0.008, orbitRadius = 20, orbitSpeed = 0.7, paused, onPlanetClick }) => {
+const Uranus = ({ scale = 0.008, orbitRadius = 20, orbitSpeed = 0.7 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const uranusRef = useRef();
   const fbx = useFBX("/src/assets/model/uranus/source/Uranus.fbx");
   const texture = useTexture("/src/assets/model/uranus/textures/uranusmap.jpg");
@@ -13,11 +15,8 @@ const Uranus = ({ scale = 0.008, orbitRadius = 20, orbitSpeed = 0.7, paused, onP
       if (child.isMesh) {
         child.material = new THREE.MeshStandardMaterial({
           map: texture,
-          roughness: 0.3,
+          roughness: 0.8,
           metalness: 0.1,
-          emissiveMap: texture,
-          emissiveIntensity: 0.2,
-          emissive: new THREE.Color("#66ccff"),
         });
       }
     });

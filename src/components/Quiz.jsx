@@ -1,6 +1,18 @@
 import { useState } from 'react';
 import Question from './Question';
-import { parseQuiz } from '../lib/parsers';
+
+function parseQuiz(raw) {
+    const stripped = raw.replace(/```(?:json)?\s*([\s\S]*?)```/i, '$1').trim();
+    try {
+        const items = JSON.parse(stripped);
+        if (!Array.isArray(items)) return [];
+        return items
+            .filter(q => q.question && q.choices?.A && q.choices?.B && q.choices?.C && q.choices?.D && q.answer)
+            .map(q => ({ question: q.question, choices: q.choices, answer: q.answer.toUpperCase() }));
+    } catch {
+        return [];
+    }
+}
 
 export default function Quiz({ raw }) {
     const [current, setCurrent] = useState(0);

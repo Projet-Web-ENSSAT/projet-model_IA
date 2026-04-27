@@ -2,8 +2,10 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../../SimulationContext";
 
-const Mars = ({ scale = 0.004, orbitRadius = 10, orbitSpeed = 0.3, paused, onPlanetClick }) => {
+const Mars = ({ scale = 0.004, orbitRadius = 10, orbitSpeed = 0.3 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const marsRef = useRef();
   const fbx = useFBX("/src/assets/model/mars/source/Mars.fbx");
   const texture = useTexture("/src/assets/model/mars/textures/8k_mars.jpg");

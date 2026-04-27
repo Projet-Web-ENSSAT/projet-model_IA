@@ -2,11 +2,15 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../../SimulationContext";
 
-const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1, paused, onPlanetClick }) => {
+const Jupiter = ({ scale = 0.015, orbitRadius = 13, orbitSpeed = 0.1 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const jupiterRef = useRef();
   const fbx = useFBX("/src/assets/model/jupiter/source/Jupiter.fbx");
-  const texture = useTexture("/src/assets/model/jupiter/textures/8k_jupiter.jpg");
+  const texture = useTexture(
+    "/src/assets/model/jupiter/textures/8k_jupiter.jpg",
+  );
 
   useMemo(() => {
     fbx.traverse((child) => {

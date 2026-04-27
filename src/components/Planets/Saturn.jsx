@@ -2,41 +2,25 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../../SimulationContext";
 
-const Saturn = ({ scale = 0.012, orbitRadius = 17, orbitSpeed = 0.1, paused, onPlanetClick }) => {
+const Saturn = ({ scale = 0.012, orbitRadius = 17, orbitSpeed = 0.1 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const saturnRef = useRef();
   const fbx = useFBX("/src/assets/model/saturn/source/Saturn.fbx");
-  const texture = useTexture("/src/assets/model/saturn/textures/Saturn.jpg");
-  const ringsTexture = useTexture("/src/assets/model/saturn/textures/ring1.jpg");
+  const texture = useTexture("/src/assets/model/saturn/textures/8k_saturn.jpg");
 
   useMemo(() => {
     fbx.traverse((child) => {
-      if (child.isMesh) console.log("Nom de l'objet trouvé :", child.name);
-      {
-        if (child.name.includes("Circle")) {
-          child.material = new THREE.MeshStandardMaterial({
-            map: ringsTexture,
-            alphaMap: ringsTexture,
-            transparent: true,
-            side: THREE.DoubleSide,
-            color: new THREE.Color("#ffffff"),
-            roughness: 0.3,
-            metalness: 0,
-          });
-          ringsTexture.wrapS = ringsTexture.wrapT = THREE.RepeatWrapping;
-        } else {
-          child.material = new THREE.MeshStandardMaterial({
-            map: texture,
-            roughness: 0.6,
-            metalness: 0.05,
-            emissiveMap: texture,
-            emissiveIntensity: 0.15,
-            emissive: new THREE.Color("#ffffff"),
-          });
-        }
+      if (child.isMesh) {
+        child.material = new THREE.MeshStandardMaterial({
+          map: texture,
+          roughness: 0.8,
+          metalness: 0.1,
+        });
       }
     });
-  }, [fbx, texture, ringsTexture]);
+  }, [fbx, texture]);
 
   useFrame((state, delta) => {
     if (!paused) {

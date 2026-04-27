@@ -2,11 +2,15 @@ import React, { useMemo, useRef } from "react";
 import { useFBX, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useSimulation } from "../../SimulationContext";
 
-const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8, paused, onPlanetClick }) => {
+const Mercury = ({ scale = 0.003, orbitRadius = 4, orbitSpeed = 0.8 }) => {
+  const { paused, onPlanetClick } = useSimulation();
   const mercuryRef = useRef();
   const fbx = useFBX("/src/assets/model/mercury/source/Mercury.fbx");
-  const texture = useTexture("/src/assets/model/mercury/textures/8k_mercury.jpg");
+  const texture = useTexture(
+    "/src/assets/model/mercury/textures/8k_mercury.jpg",
+  );
 
   useMemo(() => {
     fbx.traverse((child) => {
