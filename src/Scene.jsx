@@ -80,7 +80,7 @@ function stripMarkdown(text) {
     .trim();
 }
 
-export default function Scene() {
+export default function Scene({ onDeepSpace }) {
   const [selectedPlanet, setSelectedPlanet] = useState(null);
   const [orbitEnabled, setOrbitEnabled] = useState(true);
   const [infoPanel, setInfoPanel] = useState(null);
@@ -126,6 +126,11 @@ export default function Scene() {
       <div className="scene-container">
         <div className="global-toolbar">
           <button className="toolbar-btn" onClick={handleQuizClick}>Quiz</button>
+          {onDeepSpace && (
+            <button className="toolbar-btn toolbar-btn--deep-space" onClick={onDeepSpace}>
+              ✦ DEEP SPACE
+            </button>
+          )}
         </div>
 
         {selectedPlanet && (

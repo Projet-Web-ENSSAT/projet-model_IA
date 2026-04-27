@@ -11,6 +11,19 @@
   top: 24px;
   right: 24px;
   z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-btn--deep-space {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  font-family: 'Cinzel', serif;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .planet-toolbar {
