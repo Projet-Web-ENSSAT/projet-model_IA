@@ -1,16 +1,77 @@
-# React + Vite
+# 🌌 Astro-Learning
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **FR** | [EN below](#-astro-learning-1)
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🇫🇷 Astro-Learning
 
-## React Compiler
+Application web interactive de découverte du système solaire, développée dans le cadre d'un projet scolaire à l'ENSSAT.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Présentation
 
-## Expanding the ESLint configuration
+Astro-Learning propose une expérience immersive en 3D pour explorer le système solaire : planètes animées, zoom au clic, constellations, quiz généré par IA, vaisseau spatial et musique d'ambiance. L'objectif est de rendre l'apprentissage de l'astronomie accessible et ludique pour tous les âges.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Fonctionnalités
+
+- **Système solaire 3D** — Toutes les planètes animées avec orbites et rotations réalistes (modèles FBX/OBJ texturés)
+- **Zoom interactif** — Clic sur une planète pour zoomer dessus et afficher des informations
+- **Agents IA** — Anecdotes et descriptions des planètes générées dynamiquement, quiz spatial
+- **Deep Space** — Mode constellations interactif avec noms et mythologies
+- **Vaisseau spatial** — Le Faucon Millenium orbite dans la scène (modèle OBJ texturé)
+- **Musique d'ambiance** — Bande son Star Wars en fond
+
+### Installation & lancement
+
+**Prérequis :** Node.js 18+
+
+```bash
+# Cloner le dépôt
+git clone https://github.com/Projet-Web-ENSSAT/projet-model_IA.git
+cd projet-model_IA
+
+# Installer les dépendances
+npm install
+
+# Lancer en développement
+npm run dev
+```
+
+L'application est accessible sur `http://localhost:5173`.
+
+---
+
+## 🇬🇧 Astro-Learning
+
+Interactive web application for exploring the solar system, developed as a school project at ENSSAT.
+
+### Overview
+
+Astro-Learning offers an immersive 3D experience to explore the solar system: animated planets, click-to-zoom, constellations, AI-generated quizzes, a spaceship, and ambient music. The goal is to make learning astronomy accessible and engaging for all ages.
+
+### Features
+
+- **3D Solar System** — All planets animated with realistic orbits and rotations (textured FBX/OBJ models)
+- **Interactive Zoom** — Click on a planet to zoom in and display information
+- **AI Agents** — Dynamically generated planet facts, descriptions, and a space quiz
+- **Deep Space** — Interactive constellation mode with names and mythologies
+- **Spaceship** — The Millennium Falcon orbiting the scene (textured OBJ model)
+- **Ambient Music** — Star Wars soundtrack playing in the background
+
+### Installation & Setup
+
+**Requirements:** Node.js 18+
+
+```bash
+# Clone the repository
+git clone https://github.com/Projet-Web-ENSSAT/projet-model_IA.git
+cd projet-model_IA
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
