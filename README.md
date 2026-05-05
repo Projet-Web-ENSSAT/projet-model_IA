@@ -38,6 +38,7 @@ npm run dev
 ```
 
 L'application est accessible sur `http://localhost:5173`.
+Il ne faut pas oublier de créer le .env basé sur le .env.example
 
 ---
 
@@ -75,3 +76,4 @@ npm run dev
 ```
 
 The app will be available at `http://localhost:5173`.
+Don't forget to create .env based on .env.example
